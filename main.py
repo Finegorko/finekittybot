@@ -8,7 +8,7 @@ from telegram.ext import CommandHandler, Updater
 
 load_dotenv()
 
-secret_token = os.getenv('TOKEN')
+secret_token = os.getenv('TELEGRAM_TOKEN')
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
