@@ -1,10 +1,11 @@
 import logging
 import os
+from email import message
 
 import requests
 from dotenv import load_dotenv
 from telegram import ReplyKeyboardMarkup
-from telegram.ext import CommandHandler, Updater
+from telegram.ext import CommandHandler, MessageHandler, Updater
 
 load_dotenv()
 
@@ -46,25 +47,39 @@ def get_new_dog_image():
 
 def new_cat(update, context):
     chat = update.effective_chat
-    context.bot.send_photo(chat.id, get_new_cat_image())
+    buttons = ReplyKeyboardMarkup(
+        [["Покажи котика!"], ["Покажи собачку!"]], resize_keyboard=True
+    )
+    context.bot.send_photo(
+        chat.id,
+        get_new_cat_image(),
+        reply_markup=buttons,
+    )
 
 
 def new_dog(update, context):
     chat = update.effective_chat
-    context.bot.send_photo(chat.id, get_new_dog_image())
+    buttons = ReplyKeyboardMarkup(
+        [["Покажи котика!"], ["Покажи собачку!"]], resize_keyboard=True
+    )
+    context.bot.send_photo(
+        chat.id,
+        get_new_dog_image(),
+        reply_markup=buttons,
+    )
 
 
 def wake_up(update, context):
     chat = update.effective_chat
     name = update.message.chat.first_name
-    button = ReplyKeyboardMarkup(
-        [["/newcat"], ["/newdog"]], resize_keyboard=True
+    buttons = ReplyKeyboardMarkup(
+        [["Покажи котика!"], ["Покажи собачку!"]], resize_keyboard=True
     )
 
     context.bot.send_message(
         chat_id=chat.id,
         text=f"Привет, {name}. Кого хочешь, чтобы я тебе показал?",
-        reply_markup=button,
+        reply_markup=buttons,
     )
 
 
@@ -72,8 +87,8 @@ def main():
     updater = Updater(token=secret_token)
 
     updater.dispatcher.add_handler(CommandHandler("start", wake_up))
-    updater.dispatcher.add_handler(CommandHandler("newcat", new_cat))
-    updater.dispatcher.add_handler(CommandHandler("newdog", new_dog))
+    updater.dispatcher.add_handler(MessageHandler("Покажи котика!", new_cat))
+    updater.dispatcher.add_handler(MessageHandler("Покажи собачку!", new_dog))
 
     updater.start_polling()
     updater.idle()
