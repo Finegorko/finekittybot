@@ -5,7 +5,7 @@ from email import message
 import requests
 from dotenv import load_dotenv
 from telegram import ReplyKeyboardMarkup
-from telegram.ext import CommandHandler, MessageHandler, Updater
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 load_dotenv()
 
@@ -87,8 +87,12 @@ def main():
     updater = Updater(token=secret_token)
 
     updater.dispatcher.add_handler(CommandHandler("start", wake_up))
-    updater.dispatcher.add_handler(MessageHandler("Покажи котика!", new_cat))
-    updater.dispatcher.add_handler(MessageHandler("Покажи собачку!", new_dog))
+    updater.dispatcher.add_handler(
+        MessageHandler(Filters.text("Покажи котика!"), new_cat)
+    )
+    updater.dispatcher.add_handler(
+        MessageHandler(Filters.text("Покажи собачку!"), new_dog)
+    )
 
     updater.start_polling()
     updater.idle()
