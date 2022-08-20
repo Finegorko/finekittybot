@@ -1,1 +1,1 @@
-worker: python kittybot.py
+telegram_bot: python kittybot.py
