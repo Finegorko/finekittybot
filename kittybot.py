@@ -1,6 +1,6 @@
 import logging
 import os
-from email import message
+import sys
 
 import requests
 from dotenv import load_dotenv
@@ -9,11 +9,14 @@ from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 load_dotenv()
 
-secret_token = os.getenv("TELEGRAM_TOKEN")
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
+    level=logging.DEBUG,
+    stream=sys.stdout,
 )
 
 
@@ -84,7 +87,7 @@ def wake_up(update, context):
 
 
 def main():
-    updater = Updater(token=secret_token)
+    updater = Updater(token=TELEGRAM_TOKEN)
 
     updater.dispatcher.add_handler(CommandHandler("start", wake_up))
     updater.dispatcher.add_handler(
