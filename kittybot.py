@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from logging import Formatter, StreamHandler
 
 import requests
 from dotenv import load_dotenv
@@ -11,13 +12,6 @@ load_dotenv()
 
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.DEBUG,
-    stream=sys.stdout,
-)
 
 
 def get_new_cat_image():
@@ -86,7 +80,21 @@ def wake_up(update, context):
     )
 
 
+def check_tokens():
+    logger.debug("Проверяю наличие обязательных переменных окружения...")
+    if not TELEGRAM_TOKEN:
+        logger.critical(f"Отсутствует обязательная переменная окружения")
+        return
+    logger.debug("OK!")
+    return True
+
+
 def main():
+    logger.debug('Бот "KittyBot" запущен')
+    if not check_tokens():
+        logger.debug('Бот "KittyBot" остановлен')
+        sys.exit()
+
     updater = Updater(token=TELEGRAM_TOKEN)
 
     updater.dispatcher.add_handler(CommandHandler("start", wake_up))
@@ -102,4 +110,13 @@ def main():
 
 
 if __name__ == "__main__":
+    logger = logging.getLogger(__name__)
+    logger.setLevel(level=logging.DEBUG)
+    logger_handler = StreamHandler(stream=sys.stdout)
+    logger_formatter = Formatter(
+        fmt="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%Y/%m/%d %H:%M:%S",
+    )
+    logger_handler.setFormatter(logger_formatter)
+    logger.addHandler(logger_handler)
     main()
