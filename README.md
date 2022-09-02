@@ -1,4 +1,4 @@
 # finekittybot
-[Милый телеграм бот](https://t.me/finekittybot), который будет отправлять вам милых котиков!
+[Telegram бот](https://t.me/finekittybot), который отправляет случайных милых котов и собак!
 
 ![](https://i.imgur.com/MHgIcwP.png)
